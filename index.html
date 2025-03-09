@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>BMI Calculator</title>
     <style>
-        /* CSS Styles */
         body {
             font-family: Arial, sans-serif;
             display: flex;
@@ -14,19 +13,19 @@
             margin: 0;
             background-color: #f0f2f5;
         }
-
         .container {
             background: white;
             padding: 2rem;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            width: 300px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 320px;
+            text-align: center;
         }
-
         .input-group {
             margin: 1rem 0;
+            text-align: left;
         }
-
         input {
             width: 100%;
             padding: 8px;
@@ -34,7 +33,6 @@
             border: 1px solid #ddd;
             border-radius: 4px;
         }
-
         button {
             width: 100%;
             padding: 10px;
@@ -44,16 +42,19 @@
             border-radius: 4px;
             cursor: pointer;
         }
-
         button:hover {
             background-color: #0056b3;
         }
-
         #result {
             margin-top: 1rem;
             padding: 10px;
             border-radius: 4px;
+            font-weight: bold;
         }
+        .underweight { color: #ff9800; }
+        .normal { color: #4caf50; }
+        .overweight { color: #ff5722; }
+        .obese { color: #d32f2f; }
     </style>
 </head>
 <body>
@@ -70,39 +71,54 @@
         <button onclick="calculateBMI()">Calculate</button>
         <div id="result"></div>
     </div>
-
     <script>
-        // JavaScript Logic
         function calculateBMI() {
-            const weight = parseFloat(document.getElementById('weight').value);
-            const heightCm = parseFloat(document.getElementById('height').value);
-            
-            if (isNaN(weight) || isNaN(heightCm) || heightCm <= 0) {
-                alert("Please enter valid values!");
-                return;
-            }
-            
-            const heightM = heightCm / 100;
-            const bmi = weight / (heightM * heightM);
-            
-            const resultDiv = document.getElementById('result');
-            let category = '';
-            if (bmi < 18.5) {
-                category = 'Underweight';
-            } else if (bmi < 24) {
-                category = 'Normal';
-            } else if (bmi < 28) {
-                category = 'Overweight';
-            } else {
-                category = 'Obese';
-            }
-            
-            resultDiv.innerHTML = `
-                <strong>Your BMI: ${bmi.toFixed(1)}</strong>
-                <br>（${category}）
-            `;
-            resultDiv.style.backgroundColor = '#e9f5ff';
-        }
+    let weight = document.getElementById('weight').value.replace(',', '.');
+    let heightCm = document.getElementById('height').value.replace(',', '.');
+
+    weight = parseFloat(weight);
+    heightCm = parseFloat(heightCm);
+    
+    const resultDiv = document.getElementById('result');
+    resultDiv.innerHTML = ''; // 清空上次的结果
+
+    if (!weight || !heightCm || weight <= 0 || heightCm <= 0) {
+        resultDiv.innerHTML = `<strong style="color: red;">Please enter valid positive numbers!</strong>`;
+        return;
+    }
+
+    const heightM = heightCm / 100;
+    const bmi = weight / (heightM * heightM);
+
+    let category = '';
+    let message = '';
+
+    if (bmi < 18.5) {
+        category = 'Underweight';
+        message = '要多吃点哦，不然风一吹就倒了！🍔🍗';
+        resultDiv.style.color = '#ff9800';
+    } else if (bmi < 25) {
+        category = 'Normal weight';
+        message = '你的身材很健康，继续保持！💪';
+        resultDiv.style.color = '#4caf50';
+    } else if (bmi < 30) {
+        category = 'Overweight';
+        message = '要注意体重啦！不然可能找对象有点难哦~ 😆';
+        resultDiv.style.color = '#ff5722';
+    } else {
+        category = 'Obese';
+        message = '哥们，真的要减肥了！不然真的很难找到对象！😂';
+        resultDiv.style.color = '#d32f2f';
+    }
+
+    resultDiv.innerHTML = `
+        <strong>Your BMI: ${bmi.toFixed(1)}</strong>
+        <br>（${category}）
+        <br><em>${message}</em>
+    `;
+}
+
+ 
     </script>
 </body>
 </html>
